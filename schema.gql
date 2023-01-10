@@ -9,10 +9,7 @@ type Role {
   id: Int!
 
   """Role's name"""
-  description: String!
-
-  """Role's status"""
-  enable: Boolean!
+  name: String!
 }
 
 """
@@ -74,6 +71,5 @@ type Mutation {
 }
 
 input CreateRoleRequest {
-  description: String!
-  enable: Boolean!
+  name: String!
 }

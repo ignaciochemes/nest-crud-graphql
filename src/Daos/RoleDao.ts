@@ -14,9 +14,9 @@ export class RoleDao {
         return pepe;
     }
 
-    async getRoleByDescription(description: string): Promise<Role> {
+    async getRoleByName(name: string): Promise<Role> {
         const query = this._roleRepository.createQueryBuilder('role')
-            .where('role.description = :description', { description: description })
+            .where('role.name = :name', { name: name })
             .getOne();
         return query;
     }
