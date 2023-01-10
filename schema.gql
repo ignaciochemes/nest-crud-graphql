@@ -35,9 +35,6 @@ type Project {
   """Project's status"""
   status: String!
 
-  """Project's developers"""
-  devs: [Developer!]!
-
   """Project's required roles"""
   roles: [Role!]!
 }
@@ -79,8 +76,19 @@ input GetProjectByFiltersRequest {
 }
 
 type Mutation {
+  createDeveloper(developer: CreateDeveloperRequest!): Developer!
   createProject(project: CreateProjectRequest!): Project!
   createRole(role: CreateRoleRequest!): Role!
+}
+
+input CreateDeveloperRequest {
+  """Developer's name"""
+  name: String!
+
+  """Developer's email"""
+  email: String!
+  projects: [Float!]!
+  roles: [Float!]!
 }
 
 input CreateProjectRequest {

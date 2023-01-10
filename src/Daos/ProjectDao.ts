@@ -21,6 +21,13 @@ export class ProjectDao {
         return query;
     }
 
+    async getProjectWithRoles(): Promise<Project[]> {
+        const query = this._projectRepository.createQueryBuilder("project")
+            .innerJoinAndSelect("project.roles", "roles")
+            .getMany();
+        return query;
+    }
+
     async createProject(data: Project): Promise<Project> {
         return await this._projectRepository.save(data);
     }

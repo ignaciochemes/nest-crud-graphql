@@ -9,7 +9,6 @@ import CreateRoleRequest from "src/Models/Request/RoleResolver/CreateRoleRequest
 export class RoleServices {
     constructor(private readonly _roleDao: RoleDao) { }
 
-
     async createRole(data: CreateRoleRequest): Promise<Role> {
         const findRoleByDescription = await this._roleDao.getRoleByName(data.name);
         if (findRoleByDescription) {

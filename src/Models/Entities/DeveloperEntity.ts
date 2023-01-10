@@ -1,5 +1,5 @@
 import { Field, Int, ObjectType } from "@nestjs/graphql";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 import { GenericTable } from "./GenericTable";
 import { Project } from "./ProjectEntity";
 import { Role } from "./RoleEntity";
@@ -20,11 +20,13 @@ export class Developer extends GenericTable {
     private email: string;
 
     @Field(type => [Project], { description: "Developer's projects" })
-    @OneToMany(() => Project, (project: Project) => project.id)
+    @ManyToMany(() => Project, (project: Project) => project.id)
+    @JoinTable()
     private projects: Project[];
 
     @Field(type => [Role], { description: "Developer's roles" })
-    @OneToMany(() => Role, (role: Role) => role.id)
+    @ManyToMany(() => Role, (role: Role) => role.id)
+    @JoinTable()
     private roles: Role[];
 
     public getName(): string {
