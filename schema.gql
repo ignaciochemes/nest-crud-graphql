@@ -62,8 +62,20 @@ type Developer {
 }
 
 type Query {
-  getProjects: [Project!]!
+  getProjectsByFilters(filters: GetProjectByFiltersRequest!): [Project!]!
   getRoles: [Role!]!
+}
+
+input GetProjectByFiltersRequest {
+  name: String
+  uuid: String
+  description: String
+  status: String
+  role: String
+  completed: Boolean
+  orderBy: String
+  limit: Float
+  offset: Float
 }
 
 type Mutation {

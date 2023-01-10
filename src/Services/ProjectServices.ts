@@ -7,6 +7,7 @@ import { HttpCustomException } from "src/Exceptions/HttpCustomException";
 import { Project } from "src/Models/Entities/ProjectEntity";
 import { Role } from "src/Models/Entities/RoleEntity";
 import CreateProjectRequest from "src/Models/Request/ProjectResolver/CreateProjectRequest";
+import GetProjectByFiltersRequest from "src/Models/Request/ProjectResolver/GetProjectByQueryRequest";
 import { v4 as uuid } from "uuid";
 
 @Injectable()
@@ -48,6 +49,14 @@ export class ProjectServices {
 
     async getProjects(): Promise<Project[]> {
         const findProjects: Project[] = await this._projectDao.getProjects();
+        if (findProjects.length === 0) {
+            throw new HttpCustomException("Projects not found", StatusCodeEnums.PROJECTS_NOT_FOUND);
+        }
+        return findProjects;
+    }
+
+    async getProjectByFilters(query: GetProjectByFiltersRequest): Promise<Project[]> {
+        const findProjects: Project[] = await this._projectDao.getProjectByFilters(query);
         if (findProjects.length === 0) {
             throw new HttpCustomException("Projects not found", StatusCodeEnums.PROJECTS_NOT_FOUND);
         }

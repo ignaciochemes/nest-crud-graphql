@@ -1,6 +1,7 @@
 import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { Project } from "src/Models/Entities/ProjectEntity";
 import CreateProjectRequest from "src/Models/Request/ProjectResolver/CreateProjectRequest";
+import GetProjectByFiltersRequest from "src/Models/Request/ProjectResolver/GetProjectByQueryRequest";
 import { ProjectServices } from "src/Services/ProjectServices";
 
 @Resolver((of: any) => Project)
@@ -15,9 +16,17 @@ export class ProjectResolver {
         return response;
     }
 
+    // @Query(returns => [Project])
+    // async getProjects(): Promise<Project[]> {
+    //     const response = await this._projectService.getProjects();
+    //     return response;
+    // }
+
     @Query(returns => [Project])
-    async getProjects(): Promise<Project[]> {
-        const response = await this._projectService.getProjects();
+    async getProjectsByFilters(
+        @Args("filters") filters: GetProjectByFiltersRequest,
+    ): Promise<Project[]> {
+        const response = await this._projectService.getProjectByFilters(filters);
         return response;
     }
 }
