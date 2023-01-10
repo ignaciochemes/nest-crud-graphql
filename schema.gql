@@ -39,7 +39,7 @@ type Project {
   devs: [Developer!]!
 
   """Project's required roles"""
-  requiredRoles: [Role!]!
+  roles: [Role!]!
 }
 
 type Developer {
@@ -67,7 +67,15 @@ type Query {
 }
 
 type Mutation {
+  createProject(project: CreateProjectRequest!): Project!
   createRole(role: CreateRoleRequest!): Role!
+}
+
+input CreateProjectRequest {
+  name: String!
+  description: String!
+  status: String!
+  roles: [Float!]!
 }
 
 input CreateRoleRequest {

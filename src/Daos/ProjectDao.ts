@@ -7,9 +7,20 @@ import { Repository } from "typeorm";
 export class ProjectDao {
     constructor(@InjectRepository(Project) private readonly _projectRepository: Repository<Project>) { }
 
+    async getProjectByName(name: string): Promise<Project> {
+        const query = this._projectRepository.createQueryBuilder("project")
+            .where("project.name = :name", { name })
+            .getOne();
+        return query;
+    }
+
     async getProjects(): Promise<Project[]> {
         const query = this._projectRepository.createQueryBuilder("project")
             .getMany();
         return query;
+    }
+
+    async createProject(data: Project): Promise<Project> {
+        return await this._projectRepository.save(data);
     }
 }

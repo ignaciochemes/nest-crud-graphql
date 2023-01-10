@@ -20,4 +20,11 @@ export class RoleDao {
             .getOne();
         return query;
     }
+
+    async getRoleById(id: number): Promise<Role> {
+        const query = this._roleRepository.createQueryBuilder('role')
+            .where('role.id = :id', { id: id })
+            .getOne();
+        return query;
+    }
 }

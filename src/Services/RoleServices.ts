@@ -28,4 +28,12 @@ export class RoleServices {
         }
         return findRoles;
     }
+
+    async getRoleById(id: number): Promise<Role> {
+        const findRole = await this._roleDao.getRoleById(id);
+        if (!findRole) {
+            throw new HttpCustomException("Role not found", StatusCodeEnums.ROLE_NOT_FOUND);
+        }
+        return findRole;
+    }
 }

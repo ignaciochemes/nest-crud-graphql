@@ -1,5 +1,5 @@
 import { Field, Int, ObjectType } from "@nestjs/graphql";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Developer } from "./DeveloperEntity";
 import { GenericTable } from "./GenericTable";
 import { Role } from "./RoleEntity";
@@ -32,8 +32,9 @@ export class Project extends GenericTable {
     private devs: Developer[];
 
     @Field(type => [Role], { description: "Project's required roles" })
-    @OneToMany(() => Role, (role: Role) => role.id)
-    private requiredRoles: Role[];
+    @ManyToMany(() => Role, (role: Role) => role.id)
+    @JoinTable()
+    private roles: Role[];
 
     public getUuid(): string {
         return this.uuid;
@@ -75,14 +76,11 @@ export class Project extends GenericTable {
         this.devs = devs;
     }
 
-    public getRequiredRoles(): Role[] {
-        return this.requiredRoles;
+    public getRoles(): Role[] {
+        return this.roles;
     }
 
-    public setRequiredRoles(requiredRoles: Role[]): void {
-        this.requiredRoles = requiredRoles;
+    public setRoles(roles: Role[]): void {
+        this.roles = roles;
     }
-
-
-
 }
