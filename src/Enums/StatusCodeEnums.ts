@@ -3,13 +3,11 @@ type EnumDictionary<T extends string | symbol | number, U> = {
 };
 
 enum StatusCodeEnums {
-    PONG_NOT_FOUND = 10000,
-    MESSAGE_NOT_EQUAL_TO_PING = 10001,
+    ROLE_ALREADY_EXISTS = 10000,
 }
 
 const StatusCodeExceptionText: EnumDictionary<StatusCodeEnums, string> = {
-    [StatusCodeEnums.PONG_NOT_FOUND]: 'Pong not found',
-    [StatusCodeEnums.MESSAGE_NOT_EQUAL_TO_PING]: 'Message not equal to Ping',
+    [StatusCodeEnums.ROLE_ALREADY_EXISTS]: "ROLE_ALREADY_EXISTS",
 };
 
 export { StatusCodeEnums, StatusCodeExceptionText };

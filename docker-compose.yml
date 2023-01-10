@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+    mariadb:
+        image: "mariadb:10.5"
+        container_name: crud_graphql_mariadb
+        environment:
+            - MYSQL_ROOT_PASSWORD=root
+            - MYSQL_DATABASE=crud_graphql
+            - MYSQL_USER=root
+            - MYSQL_PASSWORD=root
+            - MYSQL_TCP_PORT=3306
+        ports:
+            - 3306:3306

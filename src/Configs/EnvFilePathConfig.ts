@@ -1,9 +1,9 @@
 import EnumEnv from './EnumEnv';
 
 export const envFilePathConfiguration = (): string => {
-    console.log(`Environment - ${process.env.SKELETON_ENV}`);
+    console.log(`Environment - ${process.env.CRUD}`);
     let envFilePath;
-    switch (process.env.SKELETON_ENV) {
+    switch (process.env.CRUD) {
         case EnumEnv.LOCAL:
             envFilePath = '.env.local';
             break;
