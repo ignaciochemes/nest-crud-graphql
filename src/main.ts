@@ -13,7 +13,7 @@ async function bootstrap() {
 
     app.use(BodyParser.json())
     app.use(BodyParser.urlencoded({ extended: true }))
-    app.setGlobalPrefix('skeleton-api');
+    app.setGlobalPrefix('crud-graphql');
     await app.listen(configService.get('PORT') || 3000);
 
 }

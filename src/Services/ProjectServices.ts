@@ -26,7 +26,7 @@ export class ProjectServices {
             throw new HttpCustomException("Status not matched with enum", StatusCodeEnums.STATUS_NOT_MATCHED_WITH_ENUM);
         }
         const roles: Role[] = [];
-        const findRoles: Role[] = await this._roleDao.getRoles();
+        const findRoles: Role[] = await this._roleDao.getAllRoles();
         findRoles.forEach((role) => {
             if (data.roles.includes(role.id)) {
                 roles.push(role);

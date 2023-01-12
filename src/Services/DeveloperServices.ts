@@ -7,6 +7,7 @@ import { HttpCustomException } from "src/Exceptions/HttpCustomException";
 import { Developer } from "src/Models/Entities/DeveloperEntity";
 import { Project } from "src/Models/Entities/ProjectEntity";
 import { Role } from "src/Models/Entities/RoleEntity";
+import AssignDeveloperToProjectRequest from "src/Models/Request/DeveloperResolver/AssignDeveloperToProjectRequest";
 import CreateDeveloperRequest from "src/Models/Request/DeveloperResolver/CreateDeveloperRequest";
 import GetDeveloperByFiltersRequest from "src/Models/Request/DeveloperResolver/GetDeveloperByQueryRequest";
 
@@ -26,14 +27,16 @@ export class DeveloperServices {
         const roles: Role[] = await this._roleSelector(data.roles);
         const projects: Project[] = await this._projectSelector(data.projects);
         // No es performante, pero es la forma más sencilla de hacerlo... creo...
+        const roleDecider: Role[] = [];
         projects.forEach((project: Project) => {
             const projectRoles: Role[] = project.getRoles();
             projectRoles.forEach((projectRole: Role) => {
-                roles.forEach((role: Role) => {
-                    if (projectRole.id !== role.id) {
-                        throw new HttpCustomException("Developer roles not matched with project roles", StatusCodeEnums.DEVELOPER_ROLES_NOT_MATCHED_WITH_PROJECT_ROLES);
-                    }
-                })
+                const role: Role[] = roles.filter((role: Role) => role.id === projectRole.id);
+                if (role.length > 0) {
+                    role.forEach((role: Role) => {
+                        roleDecider.push(role);
+                    })
+                }
             })
         });
 
@@ -41,7 +44,7 @@ export class DeveloperServices {
         newDeveloper.setName(data.name);
         newDeveloper.setEmail(data.email);
         newDeveloper.setProjects(projects);
-        newDeveloper.setRoles(roles);
+        newDeveloper.setRoles(roleDecider);
         await this._developerDao.createDeveloper(newDeveloper);
         return newDeveloper;
     }
@@ -54,9 +57,37 @@ export class DeveloperServices {
         return developers;
     }
 
+    async asignProjectToDeveloper(data: AssignDeveloperToProjectRequest): Promise<Developer> {
+        const findProject: Project = await this._projectDao.getProjectById(data.projectId);
+        if (!findProject) {
+            throw new HttpCustomException("Project not found", StatusCodeEnums.PROJECT_NOT_FOUND);
+        }
+        const findDeveloper: Developer = await this._developerDao.getDeveloperById(data.developerId);
+        if (!findDeveloper) {
+            throw new HttpCustomException("Developer not found", StatusCodeEnums.DEVELOPER_NOT_FOUND);
+        }
+        const developerRoles: number[] = [];
+        findDeveloper.getRoles().forEach((role: Role) => {
+            developerRoles.push(role.id);
+        });
+        const projectRoles: number[] = [];
+        findProject.getRoles().forEach((role: Role) => {
+            projectRoles.push(role.id);
+        });
+        const roleDecider: Role[] = [];
+        developerRoles.forEach((developerRole: number) => {
+            if (projectRoles.includes(developerRole)) {
+                roleDecider.push(findDeveloper.getRoles().filter((role: Role) => role.id === developerRole)[0]);
+            }
+        });
+        findDeveloper.setProjects([...findDeveloper.getProjects(), findProject]);
+        await this._developerDao.updateDeveloper(findDeveloper);
+        return findDeveloper;
+    }
+
     private async _roleSelector(data: number[]): Promise<Role[]> {
         const roles: Role[] = [];
-        const findRoles: Role[] = await this._roleDao.getRoles();
+        const findRoles: Role[] = await this._roleDao.getAllRoles();
         findRoles.forEach((role: Role) => {
             if (data.includes(role.id)) {
                 roles.push(role);

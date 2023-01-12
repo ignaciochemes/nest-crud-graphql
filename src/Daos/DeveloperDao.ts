@@ -12,6 +12,10 @@ export class DeveloperDao {
         return await this._developerRepository.save(data);
     }
 
+    async updateDeveloper(data: Developer): Promise<Developer> {
+        return await this._developerRepository.save(data);
+    }
+
     async getDeveloperByEmail(email: string): Promise<Developer> {
         const query = this._developerRepository.createQueryBuilder("developer")
             .where("developer.email = :email", { email: email })
@@ -50,6 +54,15 @@ export class DeveloperDao {
             query.orderBy("developer.createdAt", "DESC");
         }
         return query.getMany();
+    }
+
+    async getDeveloperById(id: number): Promise<Developer> {
+        const query = this._developerRepository.createQueryBuilder("developer")
+            .where("developer.id = :id", { id })
+            .innerJoinAndSelect("developer.roles", "roles")
+            .innerJoinAndSelect("developer.projects", "projects")
+            .getOne();
+        return query;
     }
 
 }

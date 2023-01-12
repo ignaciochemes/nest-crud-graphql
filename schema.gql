@@ -88,6 +88,7 @@ input GetProjectByFiltersRequest {
 
 type Mutation {
   createDeveloper(developer: CreateDeveloperRequest!): Developer!
+  asignProjectToDeveloper(projectId: AssignDeveloperToProjectRequest!): Developer!
   createProject(project: CreateProjectRequest!): Project!
   createRole(role: CreateRoleRequest!): Role!
 }
@@ -100,6 +101,11 @@ input CreateDeveloperRequest {
   email: String!
   projects: [Float!]!
   roles: [Float!]!
+}
+
+input AssignDeveloperToProjectRequest {
+  projectId: Float!
+  developerId: Float!
 }
 
 input CreateProjectRequest {

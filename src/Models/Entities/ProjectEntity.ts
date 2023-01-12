@@ -28,7 +28,7 @@ export class Project extends GenericTable {
 
     @Field(type => [Role], { description: "Project's required roles" })
     @ManyToMany(() => Role, (role: Role) => role.id)
-    @JoinTable()
+    @JoinTable({ name: "project_roles" })
     private roles: Role[];
 
     public getUuid(): string {

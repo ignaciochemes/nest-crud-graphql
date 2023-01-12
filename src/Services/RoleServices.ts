@@ -21,7 +21,7 @@ export class RoleServices {
     }
 
     async getRoles(): Promise<Role[]> {
-        const findRoles = await this._roleDao.getRoles();
+        const findRoles = await this._roleDao.getAllRoles();
         if (findRoles.length === 0) {
             throw new HttpCustomException("Roles not found", StatusCodeEnums.ROLES_NOT_FOUND);
         }

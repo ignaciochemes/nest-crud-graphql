@@ -11,9 +11,9 @@ export class RoleDao {
         return await this._roleRepository.save(data);
     }
 
-    async getRoles(): Promise<Role[]> {
-        const pepe = await this._roleRepository.find();
-        return pepe;
+    async getAllRoles(): Promise<Role[]> {
+        const query = await this._roleRepository.find();
+        return query;
     }
 
     async getRoleByName(name: string): Promise<Role> {
