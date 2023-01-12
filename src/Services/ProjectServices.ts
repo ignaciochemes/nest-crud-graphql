@@ -48,7 +48,7 @@ export class ProjectServices {
     }
 
     async getProjects(): Promise<Project[]> {
-        const findProjects: Project[] = await this._projectDao.getProjects();
+        const findProjects: Project[] = await this._projectDao.getAllProjects();
         if (findProjects.length === 0) {
             throw new HttpCustomException("Projects not found", StatusCodeEnums.PROJECTS_NOT_FOUND);
         }
@@ -56,6 +56,9 @@ export class ProjectServices {
     }
 
     async getProjectByFilters(query: GetProjectByFiltersRequest): Promise<Project[]> {
+        if (Object.keys(query).length === 0) {
+            return await this._projectDao.getAllProjects();
+        }
         const findProjects: Project[] = await this._projectDao.getProjectByFilters(query);
         if (findProjects.length === 0) {
             throw new HttpCustomException("Projects not found", StatusCodeEnums.PROJECTS_NOT_FOUND);

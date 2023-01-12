@@ -15,8 +15,9 @@ export class ProjectDao {
         return query;
     }
 
-    async getProjects(): Promise<Project[]> {
+    async getAllProjects(): Promise<Project[]> {
         const query = this._projectRepository.createQueryBuilder("project")
+            .limit(100)
             .getMany();
         return query;
     }

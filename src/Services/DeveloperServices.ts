@@ -8,6 +8,7 @@ import { Developer } from "src/Models/Entities/DeveloperEntity";
 import { Project } from "src/Models/Entities/ProjectEntity";
 import { Role } from "src/Models/Entities/RoleEntity";
 import CreateDeveloperRequest from "src/Models/Request/DeveloperResolver/CreateDeveloperRequest";
+import GetDeveloperByFiltersRequest from "src/Models/Request/DeveloperResolver/GetDeveloperByQueryRequest";
 
 @Injectable()
 export class DeveloperServices {
@@ -24,6 +25,7 @@ export class DeveloperServices {
         }
         const roles: Role[] = await this._roleSelector(data.roles);
         const projects: Project[] = await this._projectSelector(data.projects);
+        // No es performante, pero es la forma más sencilla de hacerlo... creo...
         projects.forEach((project: Project) => {
             const projectRoles: Role[] = project.getRoles();
             projectRoles.forEach((projectRole: Role) => {
@@ -44,6 +46,14 @@ export class DeveloperServices {
         return newDeveloper;
     }
 
+    async getDevelopersByFilters(query: GetDeveloperByFiltersRequest): Promise<Developer[]> {
+        if (Object.keys(query).length === 0) {
+            return await this._developerDao.getAllDevelopers();
+        }
+        const developers: Developer[] = await this._developerDao.getDeveloperByFilters(query);
+        return developers;
+    }
+
     private async _roleSelector(data: number[]): Promise<Role[]> {
         const roles: Role[] = [];
         const findRoles: Role[] = await this._roleDao.getRoles();
@@ -52,10 +62,11 @@ export class DeveloperServices {
                 roles.push(role);
             }
         });
-        if (roles.length === 0) {
-            throw new HttpCustomException("Roles not found", StatusCodeEnums.ROLES_NOT_FOUND);
-        } else if (roles.length !== data.length) {
+        const difference: number[] = data.filter(x => !roles.map(y => y.id).includes(x));
+        if (difference.length > 0) {
             throw new HttpCustomException("Some role not found", StatusCodeEnums.SOME_ROLE_NOT_FOUND);
+        } else if (roles.length === 0) {
+            throw new HttpCustomException("Roles not found", StatusCodeEnums.ROLES_NOT_FOUND);
         }
         return roles;
     }
@@ -68,10 +79,11 @@ export class DeveloperServices {
                 projects.push(project);
             }
         });
-        if (projects.length === 0) {
-            throw new HttpCustomException("Projects not found", StatusCodeEnums.PROJECTS_NOT_FOUND);
-        } else if (projects.length !== data.length) {
+        const difference: number[] = data.filter(x => !projects.map(y => y.id).includes(x));
+        if (difference.length > 0) {
             throw new HttpCustomException("Some project not found", StatusCodeEnums.SOME_PROJECT_NOT_FOUND);
+        } else if (projects.length === 0) {
+            throw new HttpCustomException("Projects not found", StatusCodeEnums.PROJECTS_NOT_FOUND);
         }
         return projects;
     }

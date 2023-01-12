@@ -16,12 +16,6 @@ export class ProjectResolver {
         return response;
     }
 
-    // @Query(returns => [Project])
-    // async getProjects(): Promise<Project[]> {
-    //     const response = await this._projectService.getProjects();
-    //     return response;
-    // }
-
     @Query(returns => [Project])
     async getProjectsByFilters(
         @Args("filters") filters: GetProjectByFiltersRequest,

@@ -59,8 +59,19 @@ type Developer {
 }
 
 type Query {
+  getDevelopersByFilters(filters: GetDeveloperByFiltersRequest!): [Developer!]!
   getProjectsByFilters(filters: GetProjectByFiltersRequest!): [Project!]!
   getRoles: [Role!]!
+}
+
+input GetDeveloperByFiltersRequest {
+  name: String
+  role: String
+  projectName: String
+  projectId: Float
+  orderBy: String
+  limit: Float
+  offset: Float
 }
 
 input GetProjectByFiltersRequest {
